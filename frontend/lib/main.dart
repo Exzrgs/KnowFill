@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const App());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   // This widget is the root of your application.
   @override
@@ -13,113 +13,175 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const HomePage(title: 'ノート一覧'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+class HomePage extends StatefulWidget {
+  const HomePage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+class _HomePageState extends State<HomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
+      ),
+      body: NoteList(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){},
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ),
+    );
   }
+}
+
+// データベースからも削除しないといけない
+void deleteNote(){
+  
+}
+
+// データベースの名前も変更
+void renameNote(){
+
+}
+
+class NoteList extends StatefulWidget {
+  @override
+  State<NoteList> createState() => _NoteListState();
+}
+
+class _NoteListState extends State<NoteList> {
+  List<String> noteArray = ["a","i","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u"];
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    return ListView(
+      children: [
+        for (var name in noteArray) ...{
+          ListTile(
+            leading: Container(
+              width: 100,
+            ),
+            title: Text(name),
+            trailing: GestureDetector(
+              child: const Icon(Icons.more_vert),
+              onTapDown: (details) {
+                final position = details.globalPosition;
+                showMenu(
+                  context: context,
+                  position: RelativeRect.fromLTRB(position.dx, position.dy, 0, 0),
+                  items: <PopupMenuItem<String>>[
+                    const PopupMenuItem<String>(
+                      value: '名称変更',
+                      onTap: renameNote,
+                      child: Row(
+                        children: [
+                          Icon(Icons.edit),
+                          Text('名称変更'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: '削除',
+                      onTap: deleteNote,
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete),
+                          Text('削除'),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            onTap: () => {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => NotePage(title: name),
+                  ),
+              )
+            },
+          ),
+        }
+      ],
+    );
+  }
+}
+
+class NotePage extends StatefulWidget {
+  const NotePage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<NotePage> createState() => _NotePageState();
+}
+
+class _NotePageState extends State<NotePage> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
+      body: NoteDetail(),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: (){},
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
+  }
+}
+
+class NoteDetail extends StatefulWidget {
+  @override
+  State<NoteDetail> createState() => _NoteDetailState();
+}
+
+// ToDo: 右上にメニューを表示
+class _NoteDetailState extends State<NoteDetail> {
+  List<String> problemArray = ["『(?)』によれば(　?　)（(　?　)）(　?　)に鎌倉の(　5　)に(　6　)の邸となる(　7　)が置かれ、また幕府の統治機構の原型ともいうべき(　36　)が設置されて(　18　)の実態が形成された。(　37　)は(　19　)（(　8　)）で(　6　)に 対し、東国における荘園・(　20　)からの官物・年貢納入を保証させると同時に、(　6　)による東国(　21　)を公認した。(　11　)（(　12　)/寿永4年（1185年））で(　23　)を滅ぼし、同年、(　24　)の勅許（(　24　)元年（1185年））では(　6　)へ与えられた諸国への守護・(　26　)の設置・任免を許可した。そして(　14　)（(　15　)）(　6　)が(　27　)大将に任じられ、公卿に列し(　28　)の家政機関たる公文所（(　29　)）開設の権を得たことで、いわば統治機構としての合 法性を帯びるようになり、建久3年（1192年）には(　31　)の宣下がなされた。こうして、名実ともに(　18　)として成立することとなった。守護の設置で幕府は諸国の治安維持を担当したものの、当初はその支配は限定的だったが、次第に範囲 を拡大。(　17　)や元寇を経て、全国的な(　21　)を確立するに至った。r","i"];
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        itemCount: problemArray.length,
+        itemBuilder: (context, index) {
+          return Column(
+            children: [
+              ListTile(
+                leading: Container(
+                  width: 20,
+                ),
+                title: Text(problemArray[index],
+                style: const TextStyle(
+                  fontSize: 15,
+                  letterSpacing: 1,
+                ),),
+                trailing: const Icon(Icons.more_vert),
+              ),
+              const Divider(
+                color: Colors.black,
+              ),
+            ]
+          );
+        },
+      );
   }
 }
