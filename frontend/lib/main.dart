@@ -64,7 +64,7 @@ class NoteList extends StatefulWidget {
 }
 
 class _NoteListState extends State<NoteList> {
-  List<String> noteArray = ["a","i","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u"];
+  List<String> noteArray = ["日本史","世界史","ミクロ経済学","マクロ経済学","解析学","線形代数学","OS自作入門","p","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u"];
 
   @override
   Widget build(BuildContext context) {
