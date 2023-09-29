@@ -33,7 +33,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api',
-    'user',
+    'rest_framework.authtoken',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -44,6 +45,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -119,19 +121,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-JWT_AUTH = {
-    'JWT_VERIFY_EXPIRATION': False,
-    'JWT_AUTH_HEADER_PREFIX': 'JWT',
-}
 
-
-REST_FRAMEWORK = { 
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),  
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-    ),  
-    'NON_FIELD_ERRORS_KEY': 'detail',
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
-}
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+]
