@@ -40,7 +40,43 @@ class _HomePageState extends State<HomePage> {
       ),
       body: NoteList(),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: (){
+          final controller = TextEditingController();
+          final focusNode = FocusNode();
+
+          showDialog(
+            context: context, 
+            builder: (_){
+              return AlertDialog(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text("新しいノートを追加"),
+                    Flexible(
+                      child: TextFormField(
+                        autofocus: true,
+                        focusNode: focusNode,
+                        controller: controller,
+                      ),
+                    )
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: (){
+                      Navigator.of(context).pop();
+                    }, 
+                    child: const Text("キャンセル")),
+                  TextButton(
+                    onPressed: (){
+                    }, 
+                    child: const Text("作成"),
+                  ),
+                ],
+              );
+            },
+          );
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
@@ -156,32 +192,73 @@ class NoteDetail extends StatefulWidget {
 
 // ToDo: 右上にメニューを表示
 class _NoteDetailState extends State<NoteDetail> {
-  List<String> problemArray = ["『(?)』によれば(　?　)（(　?　)）(　?　)に鎌倉の(　5　)に(　6　)の邸となる(　7　)が置かれ、また幕府の統治機構の原型ともいうべき(　36　)が設置されて(　18　)の実態が形成された。(　37　)は(　19　)（(　8　)）で(　6　)に 対し、東国における荘園・(　20　)からの官物・年貢納入を保証させると同時に、(　6　)による東国(　21　)を公認した。(　11　)（(　12　)/寿永4年（1185年））で(　23　)を滅ぼし、同年、(　24　)の勅許（(　24　)元年（1185年））では(　6　)へ与えられた諸国への守護・(　26　)の設置・任免を許可した。そして(　14　)（(　15　)）(　6　)が(　27　)大将に任じられ、公卿に列し(　28　)の家政機関たる公文所（(　29　)）開設の権を得たことで、いわば統治機構としての合 法性を帯びるようになり、建久3年（1192年）には(　31　)の宣下がなされた。こうして、名実ともに(　18　)として成立することとなった。守護の設置で幕府は諸国の治安維持を担当したものの、当初はその支配は限定的だったが、次第に範囲 を拡大。(　17　)や元寇を経て、全国的な(　21　)を確立するに至った。r","i"];
+  List<List<String>> problemArray =  [["私","は","ペン","です"],["Oh","My","God"]];
+  List<List<String>> hideList =  [["ペン"],["God"]];
+  List<Map<int, bool>> isHide = List.generate(1000, (index) => {index: false});
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: problemArray.length,
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              ListTile(
-                leading: Container(
-                  width: 20,
+    return Column(children: [
+      for (var i = 0; i < problemArray.length; i++)...{
+        Row(children: [
+          for (var j = 0; j < problemArray[i].length; j++)...{
+            if (hideList[i].contains(problemArray[i][j]))...{
+              if (isHide[i][j] == true)...{
+                // Container(
+                //   margin: const EdgeInsets.all(10.0), // 外側余白
+                //   //padding: const EdgeInsets.all(10.0), // 内側余白
+                //   color: Colors.grey,
+                //   width: 60, // 画面サイズいっぱいまで広げる
+                //   height: 30.0,
+                //   alignment: Alignment.center,
+
+                //   child: IconButton(
+                //     icon: const Icon(Icons.visibility),
+                //     onPressed: (){
+                //       setState(() {
+                //         isHide[i][j] = false;
+                //       });
+                //     },
+                //   ),
+                // ),
+
+                TextButton(
+                  child: const Text("( ? )"),
+                  onPressed: () => {
+                    setState(() {
+                      isHide[i][j] = false;
+                    })
+                  },
+                )
+              }
+              else ...{
+                // IconButton(
+                //   icon: const Icon(Icons.visibility_off),
+                //   onPressed: (){
+                //     setState(() {
+                //       isHide[i][j] = true;
+                //     });
+                //   },
+                // ),
+                TextButton(
+                  child: Text(problemArray[i][j]),
+                  onPressed: () => {
+                    setState(() {
+                      isHide[i][j] = true;
+                    })
+                  },
                 ),
-                title: Text(problemArray[index],
-                style: const TextStyle(
-                  fontSize: 15,
-                  letterSpacing: 1,
-                ),),
-                trailing: const Icon(Icons.more_vert),
-              ),
-              const Divider(
-                color: Colors.black,
-              ),
-            ]
-          );
-        },
-      );
+              }
+            }
+            else...{
+              Text(problemArray[i][j]),
+            }
+          },
+          const Divider(
+            color: Colors.black,
+          ),
+        ],)
+      }
+    ]);
   }
 }
