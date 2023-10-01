@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const App());
+}
+
+class _Provider with ChangeNotifier {
+  List<String> noteArray = ["日本史","世界史","ミクロ経済学","マクロ経済学","解析学","線形代数学","OS自作入門","p","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u"];
+  List<List<String>> problemArray =  [["私","は","ペン","です"],["Oh","My","God"]];
+  List<List<String>> hideList =  [["ペン"],["God"]];
+  List<Map<int, bool>> isHide = List.generate(1000, (index) => {index: false});
+
+  // ToDo: APIで追加もする
+  void addNote(name){
+    noteArray.add(name);
+    notifyListeners();
+  }
+
 }
 
 class App extends StatelessWidget {
@@ -10,13 +25,16 @@ class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return ChangeNotifierProvider<_Provider>(
+      create: (context) => _Provider(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const HomePage(title: 'ノート一覧'),
       ),
-      home: const HomePage(title: 'ノート一覧'),
     );
   }
 }
@@ -33,6 +51,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    final _Provider provider = Provider.of<_Provider>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -47,6 +67,7 @@ class _HomePageState extends State<HomePage> {
           showDialog(
             context: context, 
             builder: (_){
+              String taskName = "";
               return AlertDialog(
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -57,6 +78,9 @@ class _HomePageState extends State<HomePage> {
                         autofocus: true,
                         focusNode: focusNode,
                         controller: controller,
+                        onChanged: (value) => {
+                          taskName = value
+                        },
                       ),
                     )
                   ],
@@ -68,8 +92,13 @@ class _HomePageState extends State<HomePage> {
                     }, 
                     child: const Text("キャンセル")),
                   TextButton(
-                    onPressed: (){
-                    }, 
+                    onPressed: () {
+                      if (taskName == ""){
+                        return;
+                      }
+                      provider.addNote(taskName);
+                      Navigator.of(context).pop();
+                    },
                     child: const Text("作成"),
                   ),
                 ],
@@ -91,7 +120,6 @@ void deleteNote(){
 
 // データベースの名前も変更
 void renameNote(){
-
 }
 
 class NoteList extends StatefulWidget {
@@ -100,18 +128,19 @@ class NoteList extends StatefulWidget {
 }
 
 class _NoteListState extends State<NoteList> {
-  List<String> noteArray = ["日本史","世界史","ミクロ経済学","マクロ経済学","解析学","線形代数学","OS自作入門","p","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u","i","u"];
 
   @override
   Widget build(BuildContext context) {
+    final _Provider provider = Provider.of<_Provider>(context);
+
     return ListView(
       children: [
-        for (var name in noteArray) ...{
+        for (var i = 0; i < provider.noteArray.length; i++) ...{
           ListTile(
             leading: Container(
               width: 100,
             ),
-            title: Text(name),
+            title: Text(provider.noteArray[i]),
             trailing: GestureDetector(
               child: const Icon(Icons.more_vert),
               onTapDown: (details) {
@@ -147,7 +176,7 @@ class _NoteListState extends State<NoteList> {
             onTap: () => {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (BuildContext context) => NotePage(title: name),
+                  builder: (BuildContext context) => NotePage(title: provider.noteArray[i]),
                   ),
               )
             },
@@ -170,6 +199,7 @@ class NotePage extends StatefulWidget {
 class _NotePageState extends State<NotePage> {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -192,18 +222,16 @@ class NoteDetail extends StatefulWidget {
 
 // ToDo: 右上にメニューを表示
 class _NoteDetailState extends State<NoteDetail> {
-  List<List<String>> problemArray =  [["私","は","ペン","です"],["Oh","My","God"]];
-  List<List<String>> hideList =  [["ペン"],["God"]];
-  List<Map<int, bool>> isHide = List.generate(1000, (index) => {index: false});
-
   @override
   Widget build(BuildContext context) {
+    final _Provider provider = Provider.of<_Provider>(context);
+
     return Column(children: [
-      for (var i = 0; i < problemArray.length; i++)...{
+      for (var i = 0; i < provider.problemArray.length; i++)...{
         Row(children: [
-          for (var j = 0; j < problemArray[i].length; j++)...{
-            if (hideList[i].contains(problemArray[i][j]))...{
-              if (isHide[i][j] == true)...{
+          for (var j = 0; j < provider.problemArray[i].length; j++)...{
+            if (provider.hideList[i].contains(provider.problemArray[i][j]))...{
+              if (provider.isHide[i][j] == true)...{
                 // Container(
                 //   margin: const EdgeInsets.all(10.0), // 外側余白
                 //   //padding: const EdgeInsets.all(10.0), // 内側余白
@@ -226,7 +254,7 @@ class _NoteDetailState extends State<NoteDetail> {
                   child: const Text("( ? )"),
                   onPressed: () => {
                     setState(() {
-                      isHide[i][j] = false;
+                      provider.isHide[i][j] = false;
                     })
                   },
                 )
@@ -241,17 +269,17 @@ class _NoteDetailState extends State<NoteDetail> {
                 //   },
                 // ),
                 TextButton(
-                  child: Text(problemArray[i][j]),
+                  child: Text(provider.problemArray[i][j]),
                   onPressed: () => {
                     setState(() {
-                      isHide[i][j] = true;
+                      provider.isHide[i][j] = true;
                     })
                   },
                 ),
               }
             }
             else...{
-              Text(problemArray[i][j]),
+              Text(provider.problemArray[i][j]),
             }
           },
           const Divider(
