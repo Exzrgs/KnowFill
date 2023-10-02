@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<Model>(context);
+    final model = Provider.of<Model>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -28,54 +28,58 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          final controller = TextEditingController();
-          final focusNode = FocusNode();
-
-          showDialog(
-            context: context, 
-            builder: (_){
-              String taskName = "";
-              return AlertDialog(
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text("新しいノートを追加"),
-                    Flexible(
-                      child: TextFormField(
-                        autofocus: true,
-                        focusNode: focusNode,
-                        controller: controller,
-                        onChanged: (value) => {
-                          taskName = value
-                        },
-                      ),
-                    )
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: (){
-                      Navigator.of(context).pop();
-                    }, 
-                    child: const Text("キャンセル")),
-                  TextButton(
-                    onPressed: () {
-                      if (taskName == ""){
-                        return;
-                      }
-                      provider.addNote(taskName);
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("作成"),
-                  ),
-                ],
-              );
-            },
-          );
+          addNoteDialog(model);
         },
-        tooltip: 'Increment',
+        tooltip: 'AddNote',
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  void addNoteDialog(model){
+    final controller = TextEditingController();
+    final focusNode = FocusNode();
+
+    showDialog(
+      context: context, 
+      builder: (_){
+        String taskName = "";
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text("新しいノートを追加"),
+              Flexible(
+                child: TextFormField(
+                  autofocus: true,
+                  focusNode: focusNode,
+                  controller: controller,
+                  onChanged: (value) => {
+                    taskName = value
+                  },
+                ),
+              )
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Navigator.of(context).pop();
+              }, 
+              child: const Text("キャンセル")),
+            TextButton(
+              onPressed: () {
+                if (taskName == ""){
+                  return;
+                }
+                model.addNote(taskName);
+                Navigator.of(context).pop();
+              },
+              child: const Text("作成"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -16,7 +16,8 @@ class Model extends ChangeNotifier {
   void addNote(String title){
     var id = 10;
     var createdTime = DateTime.now();
-    Note newNote = Note(id, title, [], createdTime);
+    problemArray.add([]);
+    Note newNote = Note(id, title, problemArray[problemArray.length-1], createdTime);
     noteArray.add(newNote);
     notifyListeners();
   }
