@@ -82,8 +82,6 @@ DATABASES = {
         'PORT': env('DATABASES_PORT')
     }
 }
-# CREATE USER knowfill1 WITH PASSWORD 'xjxjxj';
-# CREATE DATABASE knowfilldb WITH OWNER knowfill1;
 
 
 # Password validation
