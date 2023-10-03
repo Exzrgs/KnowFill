@@ -35,38 +35,13 @@ class _NoteListViewState extends State<NoteListView> {
             child: const Icon(Icons.more_vert),
             onTapDown: (details) {
               final position = details.globalPosition;
-              showMenu(
-                context: context,
-                position: RelativeRect.fromLTRB(position.dx, position.dy, 0, 0),
-                items: <PopupMenuItem<String>>[
-                  PopupMenuItem<String>(
-                    value: '名称変更',
-                    onTap: () => model.renameNote(index, "a"),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.edit),
-                        Text('名称変更'),
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem<String>(
-                    value: '削除',
-                    onTap: () => model.deleteNote(index),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.delete),
-                        Text('削除'),
-                      ],
-                    ),
-                  ),
-                ],
-              );
+              renameDeleteMenu(context, position, model, index);
             },
           ),
           onTap: () => {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (BuildContext context) => NotePage(title: model.noteArray[index].title),
+                builder: (BuildContext context) => NotePage(noteID: index),
                 ),
               )
             }
@@ -79,6 +54,35 @@ class _NoteListViewState extends State<NoteListView> {
           );
         },
     ),
+    );
+  }
+
+  void renameDeleteMenu(BuildContext context, position, model, index){
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(position.dx, position.dy, 0, 0),
+      items: <PopupMenuItem<String>>[
+        PopupMenuItem<String>(
+          value: '名称変更',
+          onTap: () => model.renameNote(index, "a"),
+          child: const Row(
+            children: [
+              Icon(Icons.edit),
+              Text('名称変更'),
+            ],
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: '削除',
+          onTap: () => model.deleteNote(index),
+          child: const Row(
+            children: [
+              Icon(Icons.delete),
+              Text('削除'),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
