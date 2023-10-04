@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/models.dart';
 import 'package:provider/provider.dart';
-import './note_detail.dart';
 import './note_detail_page.dart';
 
 class NoteListView extends StatefulWidget {
@@ -64,7 +63,7 @@ class _NoteListViewState extends State<NoteListView> {
       items: <PopupMenuItem<String>>[
         PopupMenuItem<String>(
           value: '名称変更',
-          onTap: () => model.renameNote(index, "a"),
+          onTap: () => renameNoteDialog(model, index),
           child: const Row(
             children: [
               Icon(Icons.edit),
@@ -83,6 +82,53 @@ class _NoteListViewState extends State<NoteListView> {
           ),
         ),
       ],
+    );
+  }
+
+  void renameNoteDialog(model, index){
+    final controller = TextEditingController();
+    final focusNode = FocusNode();
+
+    showDialog(
+      context: context, 
+      builder: (_){
+        String taskName = "";
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text("名称を変更"),
+              Flexible(
+                child: TextFormField(
+                  autofocus: true,
+                  focusNode: focusNode,
+                  controller: controller,
+                  onChanged: (value) => {
+                    taskName = value
+                  },
+                ),
+              )
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: (){
+                Navigator.of(context).pop();
+              }, 
+              child: const Text("キャンセル")),
+            TextButton(
+              onPressed: () {
+                if (taskName == ""){
+                  return;
+                }
+                model.renameNote(index, taskName);
+                Navigator.of(context).pop();
+              },
+              child: const Text("作成"),
+            ),
+          ],
+        );
+      },
     );
   }
 }
