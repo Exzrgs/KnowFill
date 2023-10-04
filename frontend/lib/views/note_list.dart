@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/models.dart';
 import 'package:provider/provider.dart';
-import './note_detail.dart';
 import './note_detail_page.dart';
 
 class NoteListView extends StatefulWidget {

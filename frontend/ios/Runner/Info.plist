@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>画像を読み込んで、その中の文字をテキストに起こして穴埋め問題を作成するため</string>
+	<key>NSCameraUsageDescription</key>
+	<string>画像をその場で取って、画像を読み込んで、その中の文字をテキストに起こして穴埋め問題を作成するため</string>
 </dict>
 </plist>
