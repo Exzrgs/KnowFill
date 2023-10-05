@@ -26,8 +26,8 @@ class Problem(models.Model):
     """
     穴埋め問題クラス
     """
-    mondaibun_list = ArrayField(models.CharField(max_length=200), blank=True, null=True)
-    ana = ArrayField(models.CharField(max_length=200), blank=True)
+    mondaibun_list = ArrayField(models.CharField(max_length=2000), blank=True, null=True)
+    ana = ArrayField(models.CharField(max_length=2000), blank=True)
     note = models.ForeignKey(Note, related_name='problem', on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -38,7 +38,7 @@ class Hirabun(models.Model):
     """
     問題の生の文字列
     """
-    hirabun = models.CharField(max_length=1000)
+    hirabun = models.CharField(max_length=100000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     note_id = models.IntegerField()
