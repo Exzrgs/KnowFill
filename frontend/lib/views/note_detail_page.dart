@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './note_detail.dart';
 import 'package:provider/provider.dart';
 import '../models/models.dart';
+import 'package:image_picker/image_picker.dart';
 
 class NotePage extends StatefulWidget {
   const NotePage({super.key, required this.noteID});

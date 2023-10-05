@@ -8,7 +8,7 @@ class Model extends ChangeNotifier {
 
   // APIで受けとる
   Model(){
-    problemArray = [[Problem(1, ["私","は","ペン","です"], {"ペン"}), Problem(2, ["Oh","My","God"], {"God"})]];
+    problemArray = [[Problem(1, ["私","は","ペン","です"], {"ペン"}), Problem(2, ["Oh"," ","My"," ","God"], {"God"})]];
     noteArray = [Note(1, "日本史", problemArray[0], DateTime.now())];
   }
 

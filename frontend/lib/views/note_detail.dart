@@ -18,8 +18,8 @@ class _NoteDetailState extends State<NoteDetail> {
     final model = Provider.of<Model>(context);
 
     return Column(children: [
-      Row(children: [
-        for (var j = 0; j < model.problemArray[widget.noteID].length; j++)...{
+      for (var j = 0; j < model.problemArray[widget.noteID].length; j++)...{
+        Row(children: [
           for (var k = 0; k < model.problemArray[widget.noteID][j].allWord.length; k++)...{
             if (model.problemArray[widget.noteID][j].hideWordCandidate.contains(model.problemArray[widget.noteID][j].allWord[k]))...{
               if (model.problemArray[widget.noteID][j].isHide[k] == true)...{
@@ -71,11 +71,11 @@ class _NoteDetailState extends State<NoteDetail> {
               Text(model.problemArray[widget.noteID][j].allWord[k]),
             }
           }
-        },
+        ]),
         const Divider(
           color: Colors.black,
         ),
-      ],)
+      },
     ]);
   }
 }
