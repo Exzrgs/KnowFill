@@ -20,6 +20,9 @@ from .serializers import NoteSerializer
 from .serializers import HirabunSerializer
 from rest_framework.decorators import api_view
 
+# 穴埋めロジックファイルをインポート
+from .gen_problem import gen_problem
+
 #作成したpermissionをインポート
 from .ownpermissions import OwnPermission
 
@@ -90,8 +93,9 @@ class ProblemViewSet(viewsets.ModelViewSet):
         #note_id = data['note_id']
         #target_note = Note.objects.get(id=note_id)
         #print(target_note, "target_note")
-        mondaibun_list = list(hirabun)
-        ana = []
+        problem = gen_problem.gen_problem(hirabun)
+        mondaibun_list = problem["mondaibun_list"]
+        ana = problem["ana"]
         data['ana'] = ana
         problem_dict = {}
         #problem_dict['note_id'] = target_note.id
@@ -102,10 +106,12 @@ class ProblemViewSet(viewsets.ModelViewSet):
         created_problem = Problem.objects.create(**problem_dict)
         print(created_problem, "created_problem")
         problem_serializer = ProblemSerializer(data=problem_dict)
+        print(problem_serializer)
         if not problem_serializer.is_valid():
                 print(problem_serializer.errors)
                 return Response("validation error........2")
-        print(problem_serializer)
+    
+
         result = problem_serializer.data
         print(result, "result")
         return Response(result), created_problem
