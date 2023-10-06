@@ -59,7 +59,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Note
-        fields = ['title', 'problem', 'created_at', 'updated_at', 'order_num']
+        fields = ['title', 'problem', 'created_at', 'updated_at', 'order_num', 'id']
 
     def create(self, validated_data):
         result_dict = {}
