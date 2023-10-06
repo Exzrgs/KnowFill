@@ -358,7 +358,7 @@ def gen_problem(sentence: str) -> dict:
     sentence = sentence.replace("1", "１").replace("2", "２").replace("3", "３").replace("4", "４")
     sentence = sentence.replace("5", "５").replace("6", "６").replace("7", "７").replace("8", "８")
     sentence = sentence.replace("9", "９").replace("0", "０")
-    
+        
     # 構文解析API実行
     result_ne = cotoha_api.ne(sentence)
     result_keyword = cotoha_api.keyword(sentence)
