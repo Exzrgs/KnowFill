@@ -70,7 +70,7 @@ class NoteViewSet(viewsets.ModelViewSet):
     
     def update(self, request, pk):
         """
-        ノートのアップデート
+        ノートのタイトル更新
         """
         created_problem = ProblemViewSet().create_problem(request.data)[1]
         print(created_problem, "created_problem")
@@ -116,7 +116,7 @@ class ProblemViewSet(viewsets.ModelViewSet):
         print(result, "result")
         return Response(result), created_problem
 
-    def create(self, request):
+    def _create(self, request):
         """
         素の問題文を受け取る
         """
@@ -131,3 +131,12 @@ class ProblemViewSet(viewsets.ModelViewSet):
         result = self.create_problem(hirabun_serializer.data)[0]
         print(result)
         return result
+    
+    def create(self, request):
+        """
+        問題の作成
+        """
+        created_problem = ProblemViewSet().create_problem(request.data)[1]
+        print(created_problem, "created_problem")
+        Note.objects.get(id=request.data["note_id"]).problem.add(created_problem)
+        return Response("success")
