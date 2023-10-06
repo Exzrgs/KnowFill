@@ -41,7 +41,7 @@ class ProblemSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Problem
-        fields = ['mondaibun_list', 'ana', 'created_at', 'updated_at', 'order_num']
+        fields = ['mondaibun_list', 'ana', 'created_at', 'updated_at', 'order_num', 'id']
     
     def create(self, validated_data):
 
