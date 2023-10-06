@@ -3,9 +3,8 @@
 import os
 import urllib.request
 import json
-import configparser
 from janome.tokenizer import Tokenizer
-
+import environ
 
 # COTOHA API操作用クラス
 class CotohaApi:
@@ -342,12 +341,11 @@ def gen_problem(sentence: str) -> dict:
     APP_ROOT = os.path.dirname(os.path.abspath(__file__)) + "/"
 
     # 設定値取得
-    config = configparser.ConfigParser()
-    config.read(APP_ROOT + "config.ini")
-    CLIENT_ID = config.get("COTOHA API", "Developer Client id")
-    CLIENT_SECRET = config.get("COTOHA API", "Developer Client secret")
-    DEVELOPER_API_BASE_URL = config.get("COTOHA API", "Developer API Base URL")
-    ACCESS_TOKEN_PUBLISH_URL = config.get("COTOHA API", "Access Token Publish URL")
+    env = environ.Env()
+    CLIENT_ID = env('CLIENT_ID')
+    CLIENT_SECRET = env('CLIENT_SECRET')
+    DEVELOPER_API_BASE_URL = env('DEVELOPER_API_BASE_URL')
+    ACCESS_TOKEN_PUBLISH_URL = env('ACCESS_TOKEN_PUBLISH_URL')
 
     # COTOHA APIインスタンス生成
     cotoha_api = CotohaApi(
