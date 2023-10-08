@@ -84,4 +84,5 @@ class NoteSerializer(serializers.ModelSerializer):
             created_problem = Problem.objects.create(note=created_note, **problem_data)
             problem_list.append(created_problem.id)
         result_dict["problem_id"] = problem_list
+
         return result_dict
