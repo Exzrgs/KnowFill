@@ -83,7 +83,7 @@ class _RegisterState extends State<Register> {
 
     var data = json.decode(res.body);
 
-    if (res.statusCode != HttpStatus.accepted){
+    if (res.statusCode != HttpStatus.created){
       throw data.values;
     }
   }

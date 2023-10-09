@@ -88,7 +88,7 @@ class _UserLogin extends State<UserLogin> {
     http.Response res = await http.post(url, headers: headers, body: body);
 
     var data = json.decode(res.body);
-    if (res.statusCode != HttpStatus.accepted){
+    if (res.statusCode != HttpStatus.ok){
       throw data.values;
     }
 
