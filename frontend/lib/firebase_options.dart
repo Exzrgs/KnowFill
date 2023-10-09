@@ -44,38 +44,38 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBxAOMCQs3hSvNoi_EQTu3glnLkIscFI7I',
-    appId: '1:687667211195:web:c9b86faeb7f1a38fef329e',
-    messagingSenderId: '687667211195',
-    projectId: 'knowfill-7168e',
-    authDomain: 'knowfill-7168e.firebaseapp.com',
-    storageBucket: 'knowfill-7168e.appspot.com',
-    measurementId: 'G-97Y4QZ60LD',
+    apiKey: 'AIzaSyD-liLfuVtsyOax6tIXJRWibvDcmYky5sk',
+    appId: '1:798689958807:web:71a94fe67568fabcf242d2',
+    messagingSenderId: '798689958807',
+    projectId: 'knowfill-19cee',
+    authDomain: 'knowfill-19cee.firebaseapp.com',
+    storageBucket: 'knowfill-19cee.appspot.com',
+    measurementId: 'G-96XSSH8WVC',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCG0Ws7zmXFRleppzlpxlqTSF237UbGNN8',
-    appId: '1:687667211195:android:0bc9235508f7c50fef329e',
-    messagingSenderId: '687667211195',
-    projectId: 'knowfill-7168e',
-    storageBucket: 'knowfill-7168e.appspot.com',
+    apiKey: 'AIzaSyCsUSZeIVeH2ef0PiP4gN7iOzYQ5T-gqCE',
+    appId: '1:798689958807:android:c8c0f02f54e201f5f242d2',
+    messagingSenderId: '798689958807',
+    projectId: 'knowfill-19cee',
+    storageBucket: 'knowfill-19cee.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD050JrNr7FSvp988z9enO0xoSrXSYJwL0',
-    appId: '1:687667211195:ios:077f62dd6c8abce4ef329e',
-    messagingSenderId: '687667211195',
-    projectId: 'knowfill-7168e',
-    storageBucket: 'knowfill-7168e.appspot.com',
+    apiKey: 'AIzaSyAC_-v6I-SEwI_F6ipYcqtxYRF5x8XIHQU',
+    appId: '1:798689958807:ios:b6fefcdca8f08d81f242d2',
+    messagingSenderId: '798689958807',
+    projectId: 'knowfill-19cee',
+    storageBucket: 'knowfill-19cee.appspot.com',
     iosBundleId: 'com.example.frontend',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyD050JrNr7FSvp988z9enO0xoSrXSYJwL0',
-    appId: '1:687667211195:ios:cd3a26707d9217c4ef329e',
-    messagingSenderId: '687667211195',
-    projectId: 'knowfill-7168e',
-    storageBucket: 'knowfill-7168e.appspot.com',
+    apiKey: 'AIzaSyAC_-v6I-SEwI_F6ipYcqtxYRF5x8XIHQU',
+    appId: '1:798689958807:ios:a9666f4915657259f242d2',
+    messagingSenderId: '798689958807',
+    projectId: 'knowfill-19cee',
+    storageBucket: 'knowfill-19cee.appspot.com',
     iosBundleId: 'com.example.frontend.RunnerTests',
   );
 }

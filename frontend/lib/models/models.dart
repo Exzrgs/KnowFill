@@ -7,29 +7,63 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // 中で定義するのをやめる。全部引数として渡すようにする
 class Model extends ChangeNotifier {
-  late List<Note> noteArray;
-  late List<List<Problem>> problemArray;
+  List<Note> noteArray = [];
+  List<List<Problem>> problemArray = [];
   int mod3 = 0;
 
   // APIで受けとる
-  Model(){
-    problemArray = [[Problem(1, ["私","は","ペン","です。"], {"ペン"}), Problem(2, ["Oh"," ","My"," ","God"], {"God"}), 
-      Problem(3, ["吾妻鏡","によれば", "1180年","(","治承4年",")","12月12日","に","鎌倉","の","大倉郷","に","頼朝","の","邸","となる","大倉御所","が","置かれ","、",
-      "また","幕府","の","統治機構","の","原型","とも","いうべき","侍所","が","設置","されて","武家政権","の","実態","が","形成","された。","朝廷","は","寿永二年十月宣旨",
-      "(","1183年",")","で","頼朝","に", "対し、","東国","に","おける","荘園","・","公領","から","の","官物","・","年貢納入","を","保証","させると","同時","に","、","頼朝",
-      "に","よる","東国","支配権","を","公認","した","。",],{"吾妻鏡","1180年","治承4年","12月12日","大倉郷","頼朝","大倉御所","侍所","武家政権","朝廷","寿永二年十月宣旨","1183年","公領","支配権"})]];
+  Model() {
+    // List<Map<String, dynamic>> noteList = getNoteList();
+
+    // for (var i=0; i<noteList.length; i++)
+
+    // problemArray = [[Problem(1, ["私","は","ペン","です。"], {"ペン"}), Problem(2, ["Oh"," ","My"," ","God"], {"God"}), 
+    //   Problem(3, ["吾妻鏡","によれば", "1180年","(","治承4年",")","12月12日","に","鎌倉","の","大倉郷","に","頼朝","の","邸","となる","大倉御所","が","置かれ","、",
+    //   "また","幕府","の","統治機構","の","原型","とも","いうべき","侍所","が","設置","されて","武家政権","の","実態","が","形成","された。","朝廷","は","寿永二年十月宣旨",
+    //   "(","1183年",")","で","頼朝","に", "対し、","東国","に","おける","荘園","・","公領","から","の","官物","・","年貢納入","を","保証","させると","同時","に","、","頼朝",
+    //   "に","よる","東国","支配権","を","公認","した","。",],{"吾妻鏡","1180年","治承4年","12月12日","大倉郷","頼朝","大倉御所","侍所","武家政権","朝廷","寿永二年十月宣旨","1183年","公領","支配権"})]];
     
-    noteArray = [Note(1, "日本史", problemArray[0])];
+    // noteArray = [Note(1, "日本史", problemArray[0])];
+  }
+
+  init() async {
+    var noteList = await getNoteList();
+    for (var i=0; i<noteList.length; i++) {
+      List<Problem> problemList = [];
+      for (var j=0; j<noteList[i]["problem"].length; j++){
+        Problem newProblem = Problem(noteList[i]["problem"][j]["id"], noteList[i]["problem"][j]["mondaibun_list"], noteList[i]["problem"][j]["ana"]);
+        problemList.add(newProblem);
+      }
+      problemArray.add(problemList);
+
+      Note newNote = Note(noteList[i]["id"], noteList[i]["title"], problemList);
+      noteArray.add(newNote);
+    }
   }
 
   String baseURL = "http://127.0.0.1:8000";
   String emulater_baseURL = "http://10.0.2.2:8000";
+  final storage = FlutterSecureStorage();
+
+  Future<Map<String, String>> makeHeader() async {
+    var token = await storage.read(key: 'knowfill-token');
+    Map<String, String> headers = {'content-type':'application/json', 'Authorization':'Token $token'};
+    return headers;
+  }
+
+  Future getNoteList() async {
+    Uri url = Uri.parse(emulater_baseURL+"/api/Notelist/");
+    var headers = await makeHeader();
+    var res = await http.get(url, headers: headers);
+
+    // List<Map<String, dynamic>>
+    var data = json.decode(res.body);
+    return data;
+  }
 
   void addNote(String title) async {
     Uri url = Uri.parse(emulater_baseURL+"/api/Notelist/");
-    const storage = FlutterSecureStorage();
-    var token = await storage.read(key: 'knowfill-token');
-    Map<String, String> headers = {'content-type':'application/json', 'Authorization':'Token $token'};
+    var headers = await makeHeader();
     String body = json.encode({'title': title, 'problem': []});
     var res = await http.post(url, headers: headers, body: body);
 
@@ -55,8 +89,8 @@ class Model extends ChangeNotifier {
     return;
   }
 
-  void addProblem(){
-
+  // APIで画像データを送って、allwordを受け取る
+  void addProblem(String imageData){
   }
 
   void deleteProblem(){}

@@ -12,6 +12,7 @@ class _NoteListViewState extends State<NoteListView> {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<Model>(context);
+    model.init();
 
     return Container(
     width: 390,
