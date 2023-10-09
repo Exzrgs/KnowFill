@@ -42,7 +42,9 @@ class Model extends ChangeNotifier {
     return;
   }
 
-  void addProblem(){}
+  void addProblem(){
+
+  }
 
   void deleteProblem(){}
 
@@ -100,4 +102,11 @@ class Problem {
       j += 1;
     }
   }
+}
+
+class User {
+  int id;
+  String name;
+
+  User(this.id, this.name);
 }
