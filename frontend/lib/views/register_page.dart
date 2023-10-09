@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import './login_page.dart';
 import 'package:http/http.dart' as http;
 import '../models/models.dart';
+import '../main.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -56,12 +57,12 @@ class _RegisterState extends State<Register> {
               try {
                 final newUser = await createUser(userName, password);
                 Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => MainContent()));
+                  MaterialPageRoute(builder: (context) => App()));
               } catch (e) {
                 //if (e is CustomException && e.code == 'username-already-in-use') {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('指定したユーザー名は登録済みです'),
+                      content: Text(e.toString()),
                     ),
                   );
                   print('指定したユーザー名は登録済みです');
@@ -105,11 +106,12 @@ class _RegisterState extends State<Register> {
     String body = json.encode({'username':userName, 'password':password});
     http.Response res = await http.post(url, headers: headers, body: body);
 
+    var data = json.decode(res.body);
+
     if (res.statusCode == HttpStatus.badRequest){
-      throw CustomException('username-already-in-use', res.body);
+      throw data["username"];
     }
 
-    var data = json.decode(res.body);
     User newUser = User(data["id"], data["username"]);
     return newUser;
   }

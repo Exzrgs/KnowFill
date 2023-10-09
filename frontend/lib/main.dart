@@ -30,6 +30,7 @@ class App extends StatelessWidget {
           isLogin = false;
         } else {
           isLogin = true;
+          print('login ok');
         }
 
         return ChangeNotifierProvider<Model>(

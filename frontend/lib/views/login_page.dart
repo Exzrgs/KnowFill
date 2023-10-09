@@ -59,6 +59,7 @@ class _UserLogin extends State<UserLogin> {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => App()));
               } catch (e) {
+                
                 print(e);
                 /*if (e.code == 'invalid-email') {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -112,56 +113,13 @@ class _UserLogin extends State<UserLogin> {
     String body = json.encode({'username':userName, 'password':password});
     http.Response res = await http.post(url, headers: headers, body: body);
 
-    // if (res.statusCode == HttpStatus.accepted){
-    //   throw CustomException('username-already-in-use', res.body);
-    // }
+    if (res.statusCode == HttpStatus.badRequest){
+      throw CustomException('account-not-found', res.body);
+    }
 
     var data = json.decode(res.body);
     const storage = FlutterSecureStorage();
     await storage.write(key: 'knowfill-token', value: data["token"]);
     return;
-  }
-}
-
-class MainContent extends StatefulWidget {
-  const MainContent({Key? key}) : super(key: key);
-
-  @override
-  _MainContentState createState() => _MainContentState();
-}
-
-class _MainContentState extends State<MainContent> {
-  //ステップ１
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('成功'),
-        actions: [
-          IconButton(
-            //ステップ２
-            onPressed: () async {
-              /*await _auth.signOut();
-              if (_auth.currentUser == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('ログアウトしました'),
-                  ),
-                );
-                print('ログアウトしました！');
-              }
-              */
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => UserLogin()));
-            },
-            icon: Icon(Icons.close),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Text('ログイン成功！'),
-      ),
-    );
   }
 }
