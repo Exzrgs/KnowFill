@@ -5,10 +5,16 @@ import 'package:provider/provider.dart';
 class Model extends ChangeNotifier {
   late List<Note> noteArray;
   late List<List<Problem>> problemArray;
+  int mod3 = 0;
 
   // APIで受けとる
   Model(){
-    problemArray = [[Problem(1, ["私","は","ペン","です"], {"ペン"}), Problem(2, ["Oh"," ","My"," ","God"], {"God"})]];
+    problemArray = [[Problem(1, ["私","は","ペン","です。"], {"ペン"}), Problem(2, ["Oh"," ","My"," ","God"], {"God"}), 
+      Problem(3, ["吾妻鏡","によれば", "1180年","(","治承4年",")","12月12日","に","鎌倉","の","大倉郷","に","頼朝","の","邸","となる","大倉御所","が","置かれ","、",
+      "また","幕府","の","統治機構","の","原型","とも","いうべき","侍所","が","設置","されて","武家政権","の","実態","が","形成","された。","朝廷","は","寿永二年十月宣旨",
+      "(","1183年",")","で","頼朝","に", "対し、","東国","に","おける","荘園","・","公領","から","の","官物","・","年貢納入","を","保証","させると","同時","に","、","頼朝",
+      "に","よる","東国","支配権","を","公認","した","。",],{"吾妻鏡","1180年","治承4年","12月12日","大倉郷","頼朝","大倉御所","侍所","武家政権","朝廷","寿永二年十月宣旨","1183年","公領","支配権"})]];
+    
     noteArray = [Note(1, "日本史", problemArray[0], DateTime.now())];
   }
 
@@ -40,19 +46,18 @@ class Model extends ChangeNotifier {
 
   void deleteProblem(){}
 
-  void changeHideWord(int i, int j){
-    var mod3 = getMod3(i, j);
-    problemArray[i][j].mod3 = (mod3+1)%3;
+  void changeHideWord(noteID){
+    mod3 = (mod3+1)%3;
+
+    for (var j = 0; j < problemArray[noteID].length; j++){
+      problemArray[noteID][j].isHide = List.generate(problemArray[noteID][j].allWord.length, (k)=>true);
+    }
+
     notifyListeners();
-    return;
   }
 
   List<Set<String>> getHideWord(int i, int j){
     return problemArray[i][j].hideWord;
-  }
-
-  int getMod3(int i, int j){
-    return problemArray[i][j].mod3;
   }
 
   bool? getIsHide(int i, int j, int k){
@@ -79,10 +84,11 @@ class Problem {
   List<String> allWord;
   Set<String> hideWordCandidate;
   List<Set<String>> hideWord = [{},{},{}];
-  int mod3 = 0;
-  Map<int, bool> isHide = {};
+  late List<bool> isHide;
 
   Problem(this.id, this.allWord, this.hideWordCandidate){
+    isHide = List.generate(allWord.length, (index) => true);
+
     int j = 0;
     for (var i = 0; i < allWord.length; i++){
       if (hideWordCandidate.contains(allWord[i]) == false){
@@ -90,9 +96,7 @@ class Problem {
       }
 
       hideWord[j%3].add(allWord[i]);
-      if (j%3 == 0){
-        isHide[i] = true;
-      }
+      isHide[i] = true;
       j += 1;
     }
   }
