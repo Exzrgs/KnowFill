@@ -24,11 +24,26 @@ class _NotePageState extends State<NotePage> {
         title: Text(model.noteArray[widget.noteID].title),
       ),
       body: NoteDetail(noteID: widget.noteID),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){},
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: (){},
+            tooltip: 'Adding',
+            child: const Icon(Icons.add),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          FloatingActionButton(
+            onPressed: (){
+              model.changeHideWord(widget.noteID);
+            },
+            tooltip: 'Changing',
+            child: const Icon(Icons.sync),
+          )
+        ],
+      )
     );
   }
 }
