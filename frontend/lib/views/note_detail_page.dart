@@ -28,7 +28,9 @@ class _NotePageState extends State<NotePage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: (){},
+            onPressed: (){
+              getImageFromGarally();
+            },
             tooltip: 'Adding',
             child: const Icon(Icons.add),
           ),
@@ -45,5 +47,28 @@ class _NotePageState extends State<NotePage> {
         ],
       )
     );
+  }
+
+  XFile? _image;
+  final imagePicker = ImagePicker();
+
+  // カメラから写真を取得するメソッド
+  Future getImageFromCamera() async {
+    final pickedFile = await imagePicker.pickImage(source: ImageSource.camera);
+    setState(() {
+      if (pickedFile != null) {
+        _image = XFile(pickedFile.path);
+      }
+    });
+  }
+
+  // ギャラリーから写真を取得するメソッド
+  Future getImageFromGarally() async {
+    final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        _image = XFile(pickedFile.path);
+      }
+    });
   }
 }

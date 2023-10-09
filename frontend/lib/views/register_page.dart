@@ -1,7 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:io';
 
-import 'login.dart';
+import 'package:flutter/material.dart';
+import './login_page.dart';
+import 'package:http/http.dart' as http;
+import '../models/models.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -12,9 +15,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   //ステップ１
-  final _auth = FirebaseAuth.instance;
-
-  String email = '';
+  String userName = '';
   String password = '';
 
   @override
@@ -29,10 +30,10 @@ class _RegisterState extends State<Register> {
             padding: const EdgeInsets.all(10.0),
             child: TextField(
               onChanged: (value) {
-                email = value;
+                userName = value;
               },
               decoration: const InputDecoration(
-                hintText: 'メールアドレスを入力',
+                hintText: 'ユーザー名を入力',
               ),
             ),
           ),
@@ -53,21 +54,19 @@ class _RegisterState extends State<Register> {
             //ステップ２
             onPressed: () async {
               try {
-                final newUser = await _auth.createUserWithEmailAndPassword(
-                    email: email, password: password);
-                if (newUser != null) {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => MainContent()));
-                }
-              } on FirebaseAuthException catch (e) {
-                if (e.code == 'email-already-in-use') {
+                final newUser = await createUser(userName, password);
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => MainContent()));
+              } catch (e) {
+                //if (e is CustomException && e.code == 'username-already-in-use') {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('指定したメールアドレスは登録済みです'),
+                      content: Text('指定したユーザー名は登録済みです'),
                     ),
                   );
-                  print('指定したメールアドレスは登録済みです');
-                } else if (e.code == 'invalid-email') {
+                  print('指定したユーザー名は登録済みです');
+                  print(e);
+                /*}*/ /*else if (e.code == 'invalid-email') {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('メールアドレスのフォーマットが正しくありません'),
@@ -88,7 +87,7 @@ class _RegisterState extends State<Register> {
                     ),
                   );
                   print('パスワードは６文字以上にしてください');
-                }
+                }*/
               }
             },
           )
@@ -96,4 +95,32 @@ class _RegisterState extends State<Register> {
       ),
     );
   }
+
+  String baseURL = "http://127.0.0.1:8000";
+  String emulater_baseURL = "http://10.0.2.2:8000";
+
+  Future<User> createUser(String userName, String password) async {
+    Uri url = Uri.parse(emulater_baseURL + "/api/users/");
+    Map<String, String> headers = {'content-type':'application/json'};
+    String body = json.encode({'username':userName, 'password':password});
+    http.Response res = await http.post(url, headers: headers, body: body);
+
+    if (res.statusCode == HttpStatus.badRequest){
+      throw CustomException('username-already-in-use', res.body);
+    }
+
+    var data = json.decode(res.body);
+    User newUser = User(data["id"], data["username"]);
+    return newUser;
+  }
+}
+
+class CustomException implements Exception {
+  final String code;
+  final String message;
+
+  CustomException(this.code, this.message);
+
+  @override
+  String toString() => message;
 }

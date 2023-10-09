@@ -4,6 +4,8 @@ import './models/models.dart';
 import '../views/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:frontend/firebase_options.dart';
+import './views/login_page.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,17 +20,37 @@ class App extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<Model>(
-      create: (context) => Model(),
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: const HomePage(title: 'ノート一覧'),
-      ),
+  Widget build(BuildContext context){
+    return FutureBuilder<String?>(
+      future: getToken(), 
+      builder: (context, snapshot) {
+        var token = snapshot.data;
+        bool isLogin;
+        if (token == null){
+          isLogin = false;
+        } else {
+          isLogin = true;
+        }
+
+        return ChangeNotifierProvider<Model>(
+          create: (context) => Model(),
+          child: MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              useMaterial3: true,
+            ),
+            home: /*isLogin ? const HomePage(title: 'ノート一覧') :*/ const UserLogin()
+          ),
+        );
+      }
     );
+  }
+  
+
+  Future<String?> getToken() async {
+    final storage = FlutterSecureStorage();
+    var token = await storage.read(key: 'knowfill-token');
+    return token;
   }
 }
