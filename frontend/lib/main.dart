@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './models/models.dart';
@@ -41,7 +43,7 @@ class App extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            home: /*isLogin ? const HomePage(title: 'ノート一覧') :*/ const UserLogin()
+            home: isLogin ? const HomePage(title: 'ノート一覧') : const UserLogin()
           ),
         );
       }

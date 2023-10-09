@@ -55,40 +55,15 @@ class _RegisterState extends State<Register> {
             //ステップ２
             onPressed: () async {
               try {
-                final newUser = await createUser(userName, password);
+                await createUser(userName, password);
                 Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => App()));
               } catch (e) {
-                //if (e is CustomException && e.code == 'username-already-in-use') {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(e.toString()),
                     ),
                   );
-                  print('指定したユーザー名は登録済みです');
-                  print(e);
-                /*}*/ /*else if (e.code == 'invalid-email') {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('メールアドレスのフォーマットが正しくありません'),
-                    ),
-                  );
-                  print('メールアドレスのフォーマットが正しくありません');
-                } else if (e.code == 'operation-not-allowed') {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('指定したメールアドレス・パスワードは現在使用できません'),
-                    ),
-                  );
-                  print('指定したメールアドレス・パスワードは現在使用できません');
-                } else if (e.code == 'weak-password') {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('パスワードは６文字以上にしてください'),
-                    ),
-                  );
-                  print('パスワードは６文字以上にしてください');
-                }*/
               }
             },
           )
@@ -100,7 +75,7 @@ class _RegisterState extends State<Register> {
   String baseURL = "http://127.0.0.1:8000";
   String emulater_baseURL = "http://10.0.2.2:8000";
 
-  Future<User> createUser(String userName, String password) async {
+  Future<void> createUser(String userName, String password) async {
     Uri url = Uri.parse(emulater_baseURL + "/api/users/");
     Map<String, String> headers = {'content-type':'application/json'};
     String body = json.encode({'username':userName, 'password':password});
@@ -108,21 +83,8 @@ class _RegisterState extends State<Register> {
 
     var data = json.decode(res.body);
 
-    if (res.statusCode == HttpStatus.badRequest){
-      throw data["username"];
+    if (res.statusCode != HttpStatus.created){
+      throw data.values;
     }
-
-    User newUser = User(data["id"], data["username"]);
-    return newUser;
   }
-}
-
-class CustomException implements Exception {
-  final String code;
-  final String message;
-
-  CustomException(this.code, this.message);
-
-  @override
-  String toString() => message;
 }

@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // 中で定義するのをやめる。全部引数として渡すようにする
 class Model extends ChangeNotifier {
@@ -15,15 +19,24 @@ class Model extends ChangeNotifier {
       "(","1183年",")","で","頼朝","に", "対し、","東国","に","おける","荘園","・","公領","から","の","官物","・","年貢納入","を","保証","させると","同時","に","、","頼朝",
       "に","よる","東国","支配権","を","公認","した","。",],{"吾妻鏡","1180年","治承4年","12月12日","大倉郷","頼朝","大倉御所","侍所","武家政権","朝廷","寿永二年十月宣旨","1183年","公領","支配権"})]];
     
-    noteArray = [Note(1, "日本史", problemArray[0], DateTime.now())];
+    noteArray = [Note(1, "日本史", problemArray[0])];
   }
 
-  // ToDo: APIで追加もする
-  void addNote(String title){
-    var id = 10;
-    var createdTime = DateTime.now();
+  String baseURL = "http://127.0.0.1:8000";
+  String emulater_baseURL = "http://10.0.2.2:8000";
+
+  void addNote(String title) async {
+    Uri url = Uri.parse(emulater_baseURL+"/api/Notelist/");
+    const storage = FlutterSecureStorage();
+    var token = await storage.read(key: 'knowfill-token');
+    Map<String, String> headers = {'content-type':'application/json', 'Authorization':'Token $token'};
+    String body = json.encode({'title': title, 'problem': []});
+    var res = await http.post(url, headers: headers, body: body);
+
+    var data = json.decode(res.body);
+    print(data);
     problemArray.add([]);
-    Note newNote = Note(id, title, problemArray[problemArray.length-1], createdTime);
+    Note newNote = Note(data["note_id"], title, problemArray[problemArray.length-1]);
     noteArray.add(newNote);
     notifyListeners();
   }
@@ -76,9 +89,8 @@ class Note {
   int id;
   String title;
   List<Problem> problemList;
-  DateTime createdTime;
 
-  Note(this.id, this.title, this.problemList, this.createdTime);
+  Note(this.id, this.title, this.problemList);
 }
 
 class Problem {

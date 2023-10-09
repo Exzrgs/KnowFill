@@ -59,37 +59,11 @@ class _UserLogin extends State<UserLogin> {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => App()));
               } catch (e) {
-                
-                print(e);
-                /*if (e.code == 'invalid-email') {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(''),
+                      content: Text(e.toString()),
                     ),
                   );
-                  print('メールアドレスのフォーマットが正しくありません');
-                } else if (e.code == 'user-disabled') {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('現在指定したメールアドレスは使用できません'),
-                    ),
-                  );
-                  print('現在指定したメールアドレスは使用できません');
-                } else if (e.code == 'user-not-found') {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('指定したメールアドレスは登録されていません'),
-                    ),
-                  );
-                  print('指定したメールアドレスは登録されていません');
-                } else if (e.code == 'wrong-password') {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('パスワードが間違っています'),
-                    ),
-                  );
-                  print('パスワードが間違っています');
-                }*/
               }
             },
           ),
@@ -113,11 +87,11 @@ class _UserLogin extends State<UserLogin> {
     String body = json.encode({'username':userName, 'password':password});
     http.Response res = await http.post(url, headers: headers, body: body);
 
-    if (res.statusCode == HttpStatus.badRequest){
-      throw CustomException('account-not-found', res.body);
+    var data = json.decode(res.body);
+    if (res.statusCode != HttpStatus.ok){
+      throw data.values;
     }
 
-    var data = json.decode(res.body);
     const storage = FlutterSecureStorage();
     await storage.write(key: 'knowfill-token', value: data["token"]);
     return;
