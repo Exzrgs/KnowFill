@@ -16,6 +16,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<Model>(context);
+    model.init();
 
     return Scaffold(
       appBar: AppBar(

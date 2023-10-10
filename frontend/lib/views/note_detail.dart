@@ -16,6 +16,7 @@ class _NoteDetailState extends State<NoteDetail> {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<Model>(context);
+    model.init();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
