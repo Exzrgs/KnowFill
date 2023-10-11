@@ -25,7 +25,7 @@ class _NotePageState extends State<NotePage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Colors.lightBlue[300],
         title: Text(model.noteArray[widget.noteID].title),
       ),
       body: NoteDetail(noteID: widget.noteID),
