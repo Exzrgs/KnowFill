@@ -182,7 +182,7 @@ class ProblemViewSet(viewsets.ModelViewSet):
 
         result = problem_serializer.data
 
-        return Response(result), created_problem
+        return result, created_problem
 
     def create(self, request):
         """
@@ -190,11 +190,11 @@ class ProblemViewSet(viewsets.ModelViewSet):
         """
         
         # Problemを作成
-        created_problem = ProblemViewSet().create_problem(request.data, request)[1]
+        result, created_problem = ProblemViewSet().create_problem(request.data, request)
 
         # Noteに作成したProblemを追加
         Note.objects.get(id=request.data["note_id"]).problem.add(created_problem)
-        return Response("success")
+        return Response(result)
     
     def update(self, request, pk):
         """
