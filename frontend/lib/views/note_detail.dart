@@ -15,7 +15,6 @@ class _NoteDetailState extends State<NoteDetail> {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<Model>(context);
-    model.init();
 
     List<Problem> problemArray = model.noteArray[widget.noteID].problemList;
 

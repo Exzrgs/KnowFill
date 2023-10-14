@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/views/setting.dart';
 import 'package:provider/provider.dart';
 import './models/models.dart';
 import '../views/home_page.dart';
@@ -16,38 +17,16 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-    return FutureBuilder<String?>(
-      future: getToken(), 
-      builder: (context, snapshot) {
-        var token = snapshot.data;
-        bool isLogin;
-        if (token == null){
-          isLogin = false;
-        } else {
-          isLogin = true;
-          print('login ok');
-        }
-        print(token);
-
-        return ChangeNotifierProvider<Model>(
-          create: (context) => Model(),
-          child: MaterialApp(
-            title: 'Flutter Demo',
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-              useMaterial3: true,
-            ),
-            home: isLogin ? const HomePage(title: 'ノート一覧') : const UserLogin()
-          ),
-        );
-      }
+    return ChangeNotifierProvider<Model>(
+      create: (context) => Model(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const Setting()
+      ),
     );
-  }
-  
-
-  Future<String?> getToken() async {
-    final storage = FlutterSecureStorage();
-    var token = await storage.read(key: 'knowfill-token');
-    return token;
   }
 }
