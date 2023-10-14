@@ -6,6 +6,7 @@ import './login_page.dart';
 import 'package:http/http.dart' as http;
 import '../models/models.dart';
 import '../main.dart';
+import '../services/api.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -52,7 +53,6 @@ class _RegisterState extends State<Register> {
           ),
           ElevatedButton(
             child: const Text('新規登録'),
-            //ステップ２
             onPressed: () async {
               try {
                 await createUser(userName, password);
@@ -70,21 +70,5 @@ class _RegisterState extends State<Register> {
         ],
       ),
     );
-  }
-
-  String baseURL = "http://127.0.0.1:8000";
-  String emulater_baseURL = "http://10.0.2.2:8000";
-
-  Future<void> createUser(String userName, String password) async {
-    Uri url = Uri.parse(emulater_baseURL + "/api/users/");
-    Map<String, String> headers = {'content-type':'application/json'};
-    String body = json.encode({'username':userName, 'password':password});
-    http.Response res = await http.post(url, headers: headers, body: body);
-
-    var data = json.decode(res.body);
-
-    if (res.statusCode != HttpStatus.created){
-      throw data.values;
-    }
   }
 }

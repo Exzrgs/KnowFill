@@ -2,3 +2,4 @@
 .env
 config.ini
 google-services.json
+__pycache__/

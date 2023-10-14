@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './models/models.dart';
 import '../views/home_page.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:frontend/firebase_options.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:frontend/firebase_options.dart';
 import './views/login_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
   runApp(const App());
 }
 
@@ -34,6 +34,7 @@ class App extends StatelessWidget {
           isLogin = true;
           print('login ok');
         }
+        print(token);
 
         return ChangeNotifierProvider<Model>(
           create: (context) => Model(),
@@ -43,7 +44,7 @@ class App extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            home: isLogin ? const HomePage(title: 'ノート一覧') : const UserLogin()
+            home: /*isLogin ?*/ const HomePage(title: 'ノート一覧') /*: const UserLogin()*/
           ),
         );
       }
