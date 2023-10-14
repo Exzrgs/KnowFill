@@ -34,7 +34,7 @@ class _NotePageState extends State<NotePage> {
           FloatingActionButton(
             onPressed: () async {
               String imageData = await getImageFromGarally();
-              model.addProblem(imageData);
+              model.addProblem(widget.noteID, imageData);
             },
             tooltip: 'Adding',
             child: const Icon(Icons.add),
