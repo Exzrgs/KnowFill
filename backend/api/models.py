@@ -21,7 +21,7 @@ class Problem(models.Model):
     """
     穴埋め問題クラス
     """
-    mondaibun_list = ArrayField(models.CharField(max_length=2000))
+    mondaibun_list = ArrayField(models.CharField(max_length=2000, blank=True))
     ana = ArrayField(models.CharField(max_length=2000))
     note = models.ForeignKey(
         Note, related_name="problem", on_delete=models.CASCADE, null=True, blank=True)

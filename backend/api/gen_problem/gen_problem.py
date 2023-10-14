@@ -342,6 +342,7 @@ def gen_problem(sentence: str) -> dict:
 
     # 設定値取得
     env = environ.Env()
+    env.read_env('.env')
     CLIENT_ID = env('CLIENT_ID')
     CLIENT_SECRET = env('CLIENT_SECRET')
     DEVELOPER_API_BASE_URL = env('DEVELOPER_API_BASE_URL')
@@ -351,11 +352,6 @@ def gen_problem(sentence: str) -> dict:
     cotoha_api = CotohaApi(
         CLIENT_ID, CLIENT_SECRET, DEVELOPER_API_BASE_URL, ACCESS_TOKEN_PUBLISH_URL
     )
-
-    # 数字処理
-    sentence = sentence.replace("1", "１").replace("2", "２").replace("3", "３").replace("4", "４")
-    sentence = sentence.replace("5", "５").replace("6", "６").replace("7", "７").replace("8", "８")
-    sentence = sentence.replace("9", "９").replace("0", "０")
         
     # 構文解析API実行
     result_ne = cotoha_api.ne(sentence)
@@ -396,6 +392,7 @@ def gen_problem(sentence: str) -> dict:
         res.append(sentence[right:left_1])
         res.append(sentence[left_1:left_2])
         right = left_2
+    res.append(sentence[right:])
     # print(res)
     # 穴埋め候補単語以外を分かち書き
     response = list()
