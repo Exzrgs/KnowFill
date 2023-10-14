@@ -6,9 +6,9 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /*
-実行方法によってURLを変更する
-エミュレーター："http://10.0.2.2:8000"
-実機："http://127.0.0.1:8000"
+実行環境によってURLを変更する必要があるかも
+エミュレーター、実機："http://10.0.2.2:8000"
+本番："http://127.0.0.1:8000"
 */
 const baseURL = "http://10.0.2.2:8000";
 

@@ -16,17 +16,13 @@ class _NoteListViewState extends State<NoteListView> {
 
     return Container(
     width: 390,
-    margin: const EdgeInsets.only(top: 10, left: 10), // 上から50px、左から20pxの位置に配置
+    margin: const EdgeInsets.only(top: 10, left: 10),
     child: ListView.separated(
       itemCount: model.noteArray.length,
       itemBuilder: (context, index){
         return ListTile(
           tileColor: Colors.lightBlue[100],
-          //contentPadding: const EdgeInsets.all(10),
           minVerticalPadding: 4.0,
-          // shape: const RoundedRectangleBorder(
-          // borderRadius: BorderRadius.all(Radius.circular(100)),
-          // ),
           leading: Container(
             width: 2,
           ),

@@ -16,7 +16,6 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  //ステップ１
   String userName = '';
   String password = '';
 
