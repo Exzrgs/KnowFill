@@ -15,6 +15,7 @@ from .models import Problem
 from .models import Note
 from .models import Hirabun
 
+
 from .serializers import UserSerializer, ProblemSerializer
 from .serializers import NoteSerializer
 from .serializers import HirabunSerializer
@@ -22,6 +23,8 @@ from rest_framework.decorators import api_view
 
 # 穴埋めロジックファイルをインポート
 from .gen_problem import gen_problem
+
+from .ocr import ocr
 
 # 作成したpermissionをインポート
 from .ownpermissions import OwnPermission
@@ -97,15 +100,23 @@ class NoteViewSet(viewsets.ModelViewSet):
         # データベースに保存
         result = note_serializer.save(user_id=request.user.id)
 
-
         return Response(result)
 
     def update(self, request, pk):
         """
-         ノートのタイトル更新
+         ノートのタイトル更新 または order_numの更新
         """
-        
+        # 更新するNoteを取得
+        note = Note.objects.get(id=pk)
 
+        # 更新するNoteのtitleを更新
+        if request.data["title"]:
+            note.title = request.data["title"]
+        if request.data["order_num"]:
+            note.order_num = request.data["order_num"]
+        note.save()
+
+        return Response("success")
 
 class ProblemViewSet(viewsets.ModelViewSet):
     queryset = Problem.objects.all()
@@ -135,10 +146,14 @@ class ProblemViewSet(viewsets.ModelViewSet):
         """
          Problemを新規作成
         """
-
+        base64imge = data["problem_image"]
+        hirabun = ocr(base64imge)
+        print(hirabun)
+        data["hirabun"] = hirabun
         # 平文から穴埋め問題を作成
-        hirabun = data["hirabun"]
+        #hirabun = data["hirabun"]
         problem = gen_problem.gen_problem(hirabun)
+        print(problem)
         mondaibun_list = problem["mondaibun_list"]
         ana = problem["ana"]
 
@@ -146,6 +161,13 @@ class ProblemViewSet(viewsets.ModelViewSet):
         problem_dict = {}
         problem_dict["mondaibun_list"] = mondaibun_list
         problem_dict["ana"] = ana
+
+        # order_numが指定されている場合はそのまま
+        if data["order_num"]:
+            problem_dict["order_num"] = data["order_num"]
+        # 指定されていない場合は最後に追加
+        else:
+            problem_dict["order_num"] = Problem.objects.all().count() + 1
 
         # Problemを作成
         created_problem = Problem.objects.create(**problem_dict, user_id=request.user.id)
@@ -166,9 +188,24 @@ class ProblemViewSet(viewsets.ModelViewSet):
         """
          問題の作成
         """
+        
         # Problemを作成
         created_problem = ProblemViewSet().create_problem(request.data, request)[1]
 
         # Noteに作成したProblemを追加
         Note.objects.get(id=request.data["note_id"]).problem.add(created_problem)
         return Response("success")
+    
+    def update(self, request, pk):
+        """
+         問題の更新 (order_numの更新)
+        """
+        # 更新するProblemを取得
+        problem = Problem.objects.get(id=pk)
+
+        # 更新するProblemのorder_numを更新
+        problem.order_num = request.data["order_num"]
+        problem.save()
+
+        return Response("success")
+    
