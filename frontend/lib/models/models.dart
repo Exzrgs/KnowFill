@@ -10,6 +10,10 @@ class Model extends ChangeNotifier {
   int mod3 = 0;
 
   Model() {
+    Future(() async {
+      await init();
+      notifyListeners();
+    });
     // var problemArray = [[Problem(1, ["私","は","ペン","です。"], {"ペン"}), Problem(2, ["Oh"," ","My"," ","God"], {"God"}), 
     //   Problem(3, ["吾妻鏡","によれば", "1180年","(","治承4年",")","12月12日","に","鎌倉","の","大倉郷","に","頼朝","の","邸","となる","大倉御所","が","置かれ","、",
     //   "また","幕府","の","統治機構","の","原型","とも","いうべき","侍所","が","設置","されて","武家政権","の","実態","が","形成","された。","朝廷","は","寿永二年十月宣旨",
@@ -39,8 +43,6 @@ class Model extends ChangeNotifier {
       Note newNote = Note(noteList[i]["id"], noteList[i]["title"], problemList);
       noteArray.add(newNote);
     }
-
-    notifyListeners();
   }
 
   /*
