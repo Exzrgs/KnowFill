@@ -37,8 +37,12 @@ class Model extends ChangeNotifier {
     // }
   }
 
-  String baseURL = "http://127.0.0.1:8000";
-  String emulater_baseURL = "http://10.0.2.2:8000";
+  /*
+  実行方法によってURLを変更する
+  エミュレーター："http://10.0.2.2:8000"
+  実機："http://127.0.0.1:8000"
+  */
+  String baseURL = "http://10.0.2.2:8000";
   final storage = FlutterSecureStorage();
 
   Future<Map<String, String>> makeHeader() async {
@@ -48,7 +52,7 @@ class Model extends ChangeNotifier {
   }
 
   Future getNoteList() async {
-    Uri url = Uri.parse(emulater_baseURL+"/api/Notelist/");
+    Uri url = Uri.parse(baseURL+"/api/Notelist/");
     var headers = await makeHeader();
     var res = await http.get(url, headers: headers);
 
@@ -58,7 +62,7 @@ class Model extends ChangeNotifier {
   }
 
   void addNote(String title) async {
-    Uri url = Uri.parse(emulater_baseURL+"/api/Notelist/");
+    Uri url = Uri.parse(baseURL+"/api/Notelist/");
     var headers = await makeHeader();
     String body = json.encode({'title': title, 'problem': []});
     var res = await http.post(url, headers: headers, body: body);

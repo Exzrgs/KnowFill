@@ -44,7 +44,7 @@ class App extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            home: isLogin ? const HomePage(title: 'ノート一覧') : const UserLogin()
+            home: /*isLogin ?*/ const HomePage(title: 'ノート一覧') /*: const UserLogin()*/
           ),
         );
       }
