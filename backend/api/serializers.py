@@ -9,7 +9,6 @@ from django.contrib.auth.models import User
 # ユーザ用のトークンをインポート
 from rest_framework.authtoken.models import Token
 
-
 class UserSerializer(serializers.ModelSerializer):
     # 基本設定を行うクラス
     class Meta:
@@ -26,10 +25,9 @@ class UserSerializer(serializers.ModelSerializer):
         Token.objects.create(user=user)
         return user
 
-
 class HirabunSerializer(serializers.ModelSerializer):
     """
-    素の問題文をシリアライズするクラス
+     平文の問題文をシリアライズするクラス
     """
 
     class Meta:
