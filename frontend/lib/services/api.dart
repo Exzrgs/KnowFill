@@ -2,26 +2,41 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../models/models.dart';
+import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-const baseURL = "http://127.0.0.1:8000";
+/*
+実行方法によってURLを変更する
+エミュレーター："http://10.0.2.2:8000"
+実機："http://127.0.0.1:8000"
+*/
+const baseURL = "http://10.0.2.2:8000";
 
-// void postAddNote(String title) async {
-//   var request = createAddNoteReq(title);
-//   var url = Uri.parse(baseURL+"/api/Notelist");
-//   var response = await http.post(url,
-//     body: request,
-//     headers: {"Content-Type": "application/json"},
-//   );
+Future<void> logIn(String userName, String password) async {
+  Uri url = Uri.parse(baseURL + "/api/auth/");
+  Map<String, String> headers = {'content-type':'application/json'};
+  String body = json.encode({'username':userName, 'password':password});
+  http.Response res = await http.post(url, headers: headers, body: body);
 
-//   if (response.statusCode == HttpStatus.accepted){
-//     return Note(1, response.title, response.problem, response.updated_at, response.order_num);
-//   }
-// }
+  var data = json.decode(res.body);
+  if (res.statusCode != HttpStatus.ok){
+    throw data.values;
+  }
 
-// Map<String, dynamic> createAddNoteReq(String title){
-//   return Map<String, dynamic> {
-//     'title':title,
-//     'problem':[],
-//     'order_num':null,
-//   };
-// }
+  const storage = FlutterSecureStorage();
+  await storage.write(key: 'knowfill-token', value: data["token"]);
+  return;
+}
+
+Future<void> createUser(String userName, String password) async {
+  Uri url = Uri.parse(baseURL + "/api/users/");
+  Map<String, String> headers = {'content-type':'application/json'};
+  String body = json.encode({'username':userName, 'password':password});
+  http.Response res = await http.post(url, headers: headers, body: body);
+
+  var data = json.decode(res.body);
+
+  if (res.statusCode != HttpStatus.created){
+    throw data.values;
+  }
+}

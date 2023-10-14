@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import './note_detail.dart';
 import 'package:provider/provider.dart';
 import '../models/models.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:cloud_functions/cloud_functions.dart';
+import '../services/function.dart';
 
 class NotePage extends StatefulWidget {
   const NotePage({super.key, required this.noteID});
@@ -53,37 +52,5 @@ class _NotePageState extends State<NotePage> {
         ],
       )
     );
-  }
-
-  final imagePicker = ImagePicker();
-
-  // カメラから写真を取得するメソッド
-  Future<String> getImageFromCamera() async {
-    final pickedFile = await imagePicker.pickImage(source: ImageSource.camera);
-    XFile? image;
-    if (pickedFile != null) {
-      image = XFile(pickedFile.path);
-    }
-    List<int>? imageBytes = await image?.readAsBytes();
-    if (imageBytes == null) {
-      throw Exception("Failed to read image bytes");
-    }
-    String base64image = base64Encode(imageBytes);
-    return base64image;
-  }
-
-  // ギャラリーから写真を取得するメソッド
-  Future<String> getImageFromGarally() async {
-    final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
-    XFile? image;
-    if (pickedFile != null) {
-      image = XFile(pickedFile.path);
-    }
-    List<int>? imageBytes = await image?.readAsBytes();
-    if (imageBytes == null) {
-      throw Exception("Failed to read image bytes");
-    }
-    String base64image = base64Encode(imageBytes);
-    return base64image;
   }
 }
