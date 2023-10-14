@@ -148,12 +148,12 @@ class ProblemViewSet(viewsets.ModelViewSet):
         """
         base64imge = data["problem_image"]
         hirabun = ocr(base64imge)
-        print(hirabun)
+
         data["hirabun"] = hirabun
         # 平文から穴埋め問題を作成
         #hirabun = data["hirabun"]
         problem = gen_problem.gen_problem(hirabun)
-        print(problem)
+
         mondaibun_list = problem["mondaibun_list"]
         ana = problem["ana"]
 
