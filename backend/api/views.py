@@ -161,6 +161,7 @@ class ProblemViewSet(viewsets.ModelViewSet):
         problem_dict = {}
         problem_dict["mondaibun_list"] = mondaibun_list
         problem_dict["ana"] = ana
+        
 
         # order_numが指定されている場合はそのまま
         if data["order_num"]:
@@ -171,6 +172,7 @@ class ProblemViewSet(viewsets.ModelViewSet):
 
         # Problemを作成
         created_problem = Problem.objects.create(**problem_dict, user_id=request.user.id)
+        problem_dict["id"] = created_problem.id
 
         # Problemをシリアライズ
         problem_serializer = ProblemSerializer(data=problem_dict)
@@ -179,10 +181,11 @@ class ProblemViewSet(viewsets.ModelViewSet):
         if not problem_serializer.is_valid():
             print(problem_serializer.errors)
             return Response("validation error........2")
+        print(created_problem.id)
 
         result = problem_serializer.data
 
-        return result, created_problem
+        return problem_dict, created_problem
 
     def create(self, request):
         """
