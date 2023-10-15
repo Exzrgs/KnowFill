@@ -22,10 +22,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.lightBlue[300],
         title: Text(widget.title),
       ),
-      body: Container(
-        //color: Colors.lightBlue[100],
-        child: NoteListView(),
-      ),
+      body: const NoteListView(),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           addNoteDialog(model);
@@ -40,9 +37,9 @@ class _HomePageState extends State<HomePage> {
     final controller = TextEditingController();
     final focusNode = FocusNode();
 
-    showDialog(
+    showDialog (
       context: context, 
-      builder: (_){
+      builder: (BuildContext dialogContext){
         String taskName = "";
         return AlertDialog(
           content: Column(
@@ -64,16 +61,16 @@ class _HomePageState extends State<HomePage> {
           actions: [
             TextButton(
               onPressed: (){
-                Navigator.of(context).pop();
+                Navigator.of(dialogContext).pop();
               }, 
               child: const Text("キャンセル")),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 if (taskName == ""){
                   return;
                 }
-                model.addNote(taskName);
-                Navigator.of(context).pop();
+                await model.addNote(taskName);
+                Navigator.of(dialogContext).pop();
               },
               child: const Text("作成"),
             ),

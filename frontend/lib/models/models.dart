@@ -83,7 +83,6 @@ class Model extends ChangeNotifier {
     notifyListeners();
   }
 
-  // データベースからも削除しないといけない
   void deleteNote(index) async {
     int id = noteArray[index].id;
     Uri url = Uri.parse(baseURL+"/api/Notelist/$id");
@@ -96,18 +95,16 @@ class Model extends ChangeNotifier {
 
   // ToDo: APIの送信
   // 作成時間の更新は必要どうか?
-  void renameNote(int index, String newName){
-    // int id = noteArray[index].id;
-    // String title = noteArray[index].title;
+  void renameNote(int index, String newName) async {
+    int id = noteArray[index].id;
 
-    // Uri url = Uri.parse(baseURL+"/api/Notelist/$id");
-    // var headers = await makeHeader();
-    // String body = json.encode({'title': title, 'problem': []});
-    // await http.put(url, headers: headers, body: body);
+    Uri url = Uri.parse(baseURL+"/api/Notelist/$id/");
+    var headers = await makeHeader();
+    String body = json.encode({'title': newName, 'order_num':null});
+    await http.put(url, headers: headers, body: body);
 
     noteArray[index].title = newName;
     notifyListeners();
-    return;
   }
 
   // APIで画像データを送って、allwordを受け取る
