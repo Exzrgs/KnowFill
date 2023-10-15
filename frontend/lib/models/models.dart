@@ -84,7 +84,12 @@ class Model extends ChangeNotifier {
   }
 
   // データベースからも削除しないといけない
-  void deleteNote(index){
+  void deleteNote(index) async {
+    int id = noteArray[index].id;
+    Uri url = Uri.parse(baseURL+"/api/Notelist/$id");
+    var headers = await makeHeader();
+    await http.delete(url, headers: headers);
+
     noteArray.removeAt(index);
     notifyListeners();
   }
@@ -92,6 +97,14 @@ class Model extends ChangeNotifier {
   // ToDo: APIの送信
   // 作成時間の更新は必要どうか?
   void renameNote(int index, String newName){
+    // int id = noteArray[index].id;
+    // String title = noteArray[index].title;
+
+    // Uri url = Uri.parse(baseURL+"/api/Notelist/$id");
+    // var headers = await makeHeader();
+    // String body = json.encode({'title': title, 'problem': []});
+    // await http.put(url, headers: headers, body: body);
+
     noteArray[index].title = newName;
     notifyListeners();
     return;
