@@ -27,6 +27,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: (){
           addNoteDialog(model);
         },
+        backgroundColor: Colors.orange[200],
         tooltip: 'AddNote',
         child: const Icon(Icons.add),
       ),

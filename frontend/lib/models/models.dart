@@ -81,7 +81,7 @@ class Model extends ChangeNotifier {
     var data = json.decode(res.body);
     int id = data["note_id"];
 
-    url = Uri.parse(baseURL+"/api/Notelist/$id");
+    url = Uri.parse(baseURL+"/api/Notelist/${id}");
     res = await http.get(url, headers: headers);
     data = json.decode(res.body);
 
@@ -94,7 +94,7 @@ class Model extends ChangeNotifier {
 
   void deleteNote(index) async {
     int id = noteArray[index].id;
-    Uri url = Uri.parse(baseURL+"/api/Notelist/$id");
+    Uri url = Uri.parse(baseURL+"/api/Notelist/${id}/");
     var headers = await makeHeader();
     await http.delete(url, headers: headers);
 
@@ -107,7 +107,7 @@ class Model extends ChangeNotifier {
   void renameNote(int index, String newName) async {
     int id = noteArray[index].id;
 
-    Uri url = Uri.parse(baseURL+"/api/Notelist/$id/");
+    Uri url = Uri.parse(baseURL+"/api/Notelist/${id}/");
     var headers = await makeHeader();
     String body = json.encode({'title': newName, 'order_num':null});
     await http.put(url, headers: headers, body: body);
@@ -117,22 +117,21 @@ class Model extends ChangeNotifier {
   }
 
   // APIで画像データを送って、allwordを受け取る
-  Future addProblem(int note_id, String imageData) async {
+  Future addProblem(int noteIndex, String imageData) async {
     Uri url = Uri.parse(baseURL+"/api/problem/");
     var headers = await makeHeader();
-    String body = json.encode({'problem_image': imageData, 'note_id': note_id, 'order_num': null});
+    int noteID = noteArray[noteIndex].id;
+    String body = json.encode({'problem_image': imageData, 'note_id': noteID, 'order_num': null});
     var res = await http.post(url, headers: headers, body: body);
 
     var getList = json.decode(res.body);
+    print(res.body);
 
-    List<Problem> problemArray = [];
+    Set<dynamic> setCandidate = getList["ana"].toSet();
 
-    for (var i=0; i<getList["mondaibun_list"].length; i++){
-      var problem = Problem(getList["id"], getList["mondaibun_list"], getList["ana"]);
-      problemArray.add(problem);
-    }
+    var problem = Problem(getList["id"], getList["mondaibun_list"], setCandidate);
 
-    noteArray[note_id].problemList = problemArray;
+    noteArray[noteIndex].problemList.add(problem);
 
     notifyListeners();
   }
@@ -178,9 +177,9 @@ class Note {
 }
 
 class Problem {
-  int id;
-  List<String> allWord;
-  Set<String> hideWordCandidate;
+  int? id;
+  List<dynamic> allWord;
+  Set<dynamic> hideWordCandidate;
   List<Set<String>> hideWord = [{},{},{}];
   late List<bool> isHide;
 
