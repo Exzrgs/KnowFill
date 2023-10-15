@@ -126,9 +126,10 @@ class Model extends ChangeNotifier {
 
     var getList = json.decode(res.body);
     print(res.body);
-    int? id = getList["id"];
 
-    var problem = Problem(id, getList["mondaibun_list"], getList["ana"]);
+    Set<dynamic> setCandidate = getList["ana"].toSet();
+
+    var problem = Problem(getList["id"], getList["mondaibun_list"], setCandidate);
 
     noteArray[noteIndex].problemList.add(problem);
 
