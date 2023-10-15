@@ -377,7 +377,7 @@ def gen_problem(sentence: str) -> dict:
     res = sentence
 
     # 穴埋め候補単語を抽出(neとkeywordの共通集合)
-    ana_set = (ne_set & keyword_set) - japanese_lemmas_set
+    ana_set = (ne_set | keyword_set) - japanese_lemmas_set
     ana_list = list(ana_set)
     # 出現順にソート
     ana_list_index = [(ana, sentence.index(ana)) for ana in ana_list]
