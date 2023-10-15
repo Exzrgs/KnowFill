@@ -52,7 +52,7 @@ class ProblemSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
             "order_num",
-            "id",
+            "id"
         ]
 
     def create(self, validated_data):
