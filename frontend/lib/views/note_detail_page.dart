@@ -33,8 +33,9 @@ class _NotePageState extends State<NotePage> {
           FloatingActionButton(
             onPressed: () async {
               String imageData = await getImageFromGarally();
-              model.addProblem(widget.noteID, imageData);
+              await model.addProblem(widget.noteID, imageData);
             },
+            backgroundColor: Colors.orange[200],
             tooltip: 'Adding',
             child: const Icon(Icons.add),
           ),
@@ -45,6 +46,7 @@ class _NotePageState extends State<NotePage> {
             onPressed: (){
               model.changeHideWord(widget.noteID);
             },
+            backgroundColor: Colors.yellow[300],
             tooltip: 'Changing',
             child: const Icon(Icons.sync),
           )
