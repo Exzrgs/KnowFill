@@ -28,6 +28,7 @@ class _NoteListViewState extends State<NoteListView> {
             width: 2,
           ),
           title: Text(model.noteArray[index].title),
+          subtitle: Text("${model.noteArray[index].updateTime.year}年${model.noteArray[index].updateTime.month}月${model.noteArray[index].updateTime.day}日"),
           trailing: GestureDetector(
             child: const Icon(Icons.more_vert),
             onTapDown: (details) {

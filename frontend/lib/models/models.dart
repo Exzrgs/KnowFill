@@ -40,7 +40,11 @@ class Model extends ChangeNotifier {
         problemList.add(newProblem);
       }
 
-      Note newNote = Note(noteList[i]["id"], noteList[i]["title"], problemList);
+      DateTime updateTime = DateTime.parse(noteList[i]["updated_at"]);
+
+      print(updateTime);
+
+      Note newNote = Note(noteList[i]["id"], noteList[i]["title"], problemList, updateTime);
       noteArray.add(newNote);
     }
   }
@@ -74,11 +78,16 @@ class Model extends ChangeNotifier {
     var headers = await makeHeader();
     String body = json.encode({'title': title, 'problem': []});
     var res = await http.post(url, headers: headers, body: body);
-
     var data = json.decode(res.body);
-    print(data);
+    int id = data["note_id"];
 
-    Note newNote = Note(data["note_id"], title, []);
+    url = Uri.parse(baseURL+"/api/Notelist/$id");
+    res = await http.get(url, headers: headers);
+    data = json.decode(res.body);
+
+    DateTime updateTime = DateTime.parse(data["updated_at"]);
+
+    Note newNote = Note(id, title, [], updateTime);
     noteArray.add(newNote);
     notifyListeners();
   }
@@ -163,8 +172,9 @@ class Note {
   int id;
   String title;
   List<Problem> problemList;
+  DateTime updateTime;
 
-  Note(this.id, this.title, this.problemList);
+  Note(this.id, this.title, this.problemList, this.updateTime);
 }
 
 class Problem {
